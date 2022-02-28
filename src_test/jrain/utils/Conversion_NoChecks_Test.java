@@ -98,15 +98,15 @@ public class Conversion_NoChecks_Test {
 		assertEquals(l0, Conversion_NoChecks.byteArrayToLong(Conversion_NoChecks.longToByteArray(l0, 4),0,4));
 	}
 
-	@Test
-	public void testByteToBit() {
-		assertArrayEquals(b0, Conversion_NoChecks.byteToBit(s0.getBytes()[0]));
-	}
-
-	@Test
-	public void testByteArrayToBitArray() {
-		assertArrayEquals(b2, Conversion_NoChecks.byteArrayToBitArray(b1));
-	}
+//	@Test
+//	public void testByteToBit() {
+//		assertArrayEquals(b0, Conversion_NoChecks.byteToBit(s0.getBytes()[0]));
+//	}
+//
+//	@Test
+//	public void testByteArrayToBitArray() {
+//		assertArrayEquals(b2, Conversion_NoChecks.byteArrayToBitArray(b1));
+//	}
 
 	@Test
 	public void testByteArrayToStringPrintable() {

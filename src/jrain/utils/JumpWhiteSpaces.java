@@ -1,9 +1,18 @@
 package jrain.utils;
 
-
-
+/**
+ * @author poltergeist0
+ *
+ * Set of methods to deal with white spaces and comments
+ */
 public class JumpWhiteSpaces {
-	public static boolean isWhiteSpace(String s){
+	
+	/**
+	 * Check if the given string is a whitespace
+	 * @param s is the string to process
+	 * @return true if the string contains only a whitespace
+	 */
+	public static boolean isWhitespace(String s){
 		if(" ".equals(s)) return true;
 		if("\t".equals(s)) return true;
 		if("\r".equals(s)) return true;
@@ -11,15 +20,31 @@ public class JumpWhiteSpaces {
 		return false;
 	}
 	
-	public static int jumpWhiteSpaces(String s, int currentPosition){
-		while(isWhiteSpace(s.substring(currentPosition, currentPosition+1))) currentPosition++;
+	/**
+	 * Get the new position in the given string starting at the given position and
+	 * advancing any whitespace.
+	 * If there is no whitespace then the given position is returned.
+	 * 
+	 * @param s is the string to process
+	 * @param currentPosition is the start position to use in processing
+	 * @return the new position after any whitespace
+	 */
+	public static int jumpWhitespaces(String s, int currentPosition){
+		while(isWhitespace(s.substring(currentPosition, currentPosition+1))) currentPosition++;
 		return currentPosition;
 	}
 	
+	/**
+	 * Advance to after any whitespace or XML comment.
+	 * 
+	 * @param s is the string to process
+	 * @param currentPosition is the start position to use in processing
+	 * @return the new position after any whitespace or -1 if there is no XML comment closing tag
+	 */
 	public static int xmlJump(String s, int currentPosition){
 		//jump over white spaces and XML comments
 		//return new position or -1 if there is no comment closing tag
-		int pos=jumpWhiteSpaces(s, currentPosition);
+		int pos=jumpWhitespaces(s, currentPosition);
 		//jump comments
 		if(s.startsWith("<!--", pos)){
 			pos+=4;
@@ -28,7 +53,7 @@ public class JumpWhiteSpaces {
 				return -1;
 			}
 			pos+=3;
-			pos=JumpWhiteSpaces.jumpWhiteSpaces(s, pos);
+			pos=JumpWhiteSpaces.jumpWhitespaces(s, pos);
 		}
 		return pos;
 	}

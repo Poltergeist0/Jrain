@@ -5,10 +5,8 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-
 /**
- * @author Lu�s Lemos
+ * @author poltergeist0
  *
  * This class implements static methods that can be used to convert from one data
  * type to another.
@@ -18,8 +16,6 @@ public class Conversion_NoChecks {
 	/**
 	 * This method converts a byte array into an integer array. This is required since java does not
 	 * support assigning nor casting byte arrays to integer arrays
-	 * 
-	 * @author Lu�s Lemos
 	 * 
 	 * @param b is the byte array
 	 * @return the integer array
@@ -32,6 +28,12 @@ public class Conversion_NoChecks {
 		return c;
 	}
 	
+	/**
+	 * Convert a byte array into a {@link Byte} array.
+	 * 
+	 * @param b is the byte array
+	 * @return the {@link Byte} array
+	 */
 	public static Byte[] byteArrayToByteArray(byte[] b){
 		Byte[]c=new Byte[b.length];
 		for (int i = 0; i < c.length; i++) {
@@ -40,6 +42,12 @@ public class Conversion_NoChecks {
 		return c;
 	}
 	
+	/**
+	 * Convert a {@link Byte} array into a byte array.
+	 * 
+	 * @param b is the {@link Byte} array
+	 * @return the byte array
+	 */
 	public static byte[] ByteArrayTobyteArray(Byte[] b){
 		byte[]c=new byte[b.length];
 		for (int i = 0; i < c.length; i++) {
@@ -48,6 +56,13 @@ public class Conversion_NoChecks {
 		return c;
 	}
 	
+	/**
+	 * Convert an int array into a {@link Byte} array.
+	 * WARNING: values are truncated if the are outside the limits supported by {@link Byte}
+	 * 
+	 * @param b is the int array
+	 * @return the {@link Byte} array
+	 */
 	public static byte[] intArrayToByteArray(final int[] a){
 		byte[]c=new byte[a.length];
 		for (int i = 0; i < c.length; i++) {
@@ -57,13 +72,12 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * This method converts a String into a char array. This is required since java does not
-	 * have a method to return char arrays out of strings
+	 * This method converts a String into a char array.
+	 * This is required since java does not have a method to return char arrays 
+	 * out of strings, only byte arrays.
 	 * 
-	 * @author Lu�s Lemos
-	 * 
-	 * @param b is the byte array
-	 * @return the integer array
+	 * @param b is the {@link String}
+	 * @return the char array
 	 */
 	public static char[] stringToCharArray(String s){
 		byte[] b=s.getBytes();
@@ -75,15 +89,10 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * This method transforms a string into an integer array so that it can be processed 
-	 * by the obfuscation methods.
-	 * Basically, each character in the string is turned into an integer
-	 * It is the opposite operation of {@link #intArrayToString(int[])}
+	 * Transforms a string into an int array.
 	 * 
-	 * @author Lu�s Lemos
-	 * 
-	 * @param s is the string to obfuscate
-	 * @return is the string represented as an integer array
+	 * @param s is the {@link String}
+	 * @return is the int array
 	 */
 	public static int[] stringToIntArray(String s){
 		byte[] b=s.getBytes();
@@ -92,14 +101,15 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * This method transforms an integer array into a string. It assumes that each array position contains
-	 * an integer between zero and 255 (inclusive) or, in other words, an integer corresponding to a byte.
-	 * If that is not the case, the method returns an unexpected string.
+	 * This method transforms an integer array into a string.
+	 * It assumes that each array position contains an integer between zero and 
+	 * 255 (inclusive) or, in other words, an integer corresponding to an unsigned
+	 * byte.
+	 * If that is not the case, values are truncated and, the method returns an 
+	 * unexpected string.
 	 * It is the opposite operation of {@link #stringToIntArray(String)}
 	 * 
-	 * @author Lu�s Lemos
-	 * 
-	 * @param a is the integer array with each position holding the integer equivalent of a byte
+	 * @param a is the int array with each position holding the integer equivalent of a byte
 	 * @return the string
 	 */
 	public static String intArrayToString(int[] a){
@@ -111,14 +121,14 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * This method converts a string array with integers in each position into an integer 
-	 * array (parses an integer from each position of the string array).
-	 * It is useful for reading integer arrays from the main method arguments.
-	 * 
-	 * @author Lu�s Lemos
-	 * 
+	 * This method converts a string array with (textual) integers in each 
+	 * position into an integer array (parses an integer from each position of 
+	 * the string array).
+	 * It is useful for reading integer arrays from the main method arguments or
+	 * other textual inputs.
+	 *  
 	 * @param s is the string array with the integers in each position
-	 * @return an integer array with the integers
+	 * @return an int array
 	 */
 	public static int[] intStringArrayToIntArray(String[] s){
 		int[] i=new int[s.length];
@@ -129,10 +139,10 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * This method concatenates a string array into a string
+	 * Concatenate a string array into a string.
 	 * 
-	 * @param array
-	 * @return
+	 * @param array is the string array
+	 * @return a string that is the result of concatenation
 	 */
 	public static String stringArrayToString(String[] array){
 		String s=array[0];
@@ -145,11 +155,11 @@ public class Conversion_NoChecks {
 	/**
 	 * Non regex method to split a string as opposed to the {@link String#split(String)} method
 	 * 
-	 * @param str	is the string to be split
+	 * @param str is the string to be split
 	 * @param separator	is the separator
 	 * @param start is the start position to begin looking. If start>1 then the first position of the return array is the string up to the start position even if it has the separator in it
 	 * @param end is the end position to stop looking. If end<str.length then the last position of the return array is the string from end to the length of the string even if it has the separator in it
-	 * @return
+	 * @return a string array
 	 * @throws IndexOutOfBoundsException if end<start or start<0 or end>length of string
 	 */
 	public static String[] stringToStringArray(String str,String separator,int start,int end)throws IndexOutOfBoundsException{
@@ -186,9 +196,9 @@ public class Conversion_NoChecks {
 	 * zeros to the left.
 	 * This method performs the reverse operation of {@link #byteArrayToLong(byte[], int, int)}.
 	 * 
-	 * @param lo
-	 * @param longSize
-	 * @return
+	 * @param lo is the long to split into bytes
+	 * @param longSize is the intended number of bytes
+	 * @return a byte array with the decomposition of the long in bytes
 	 */
 	public static byte[] longToByteArray(final long lo,final int longSize){
 		byte[] b=new byte[longSize];
@@ -214,7 +224,7 @@ public class Conversion_NoChecks {
 	 * @param b is the byte array that contains the long and, possibly, other data
 	 * @param startIndex is the position in the array of the leftmost byte of the long
 	 * @param longSize is the number of bytes to convert to a long
-	 * @return
+	 * @return a long value
 	 */
 	public static long byteArrayToLong(final byte[] b, final int startIndex,final int longSize){
 		long o=0;
@@ -225,45 +235,12 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * Convert a byte into a bit array. Each bit is stored in a byte so the result is
-	 * returned in a byte array.
+	 * Convert a byte array into a printable string by converting each numeric
+	 * byte into its text equivalent.
 	 * 
-	 * @param b
-	 * @return
-	 */
-	public static byte[] byteToBit(byte b){
-		byte[] a=new byte[8];
-		a[0]=(byte) (b>>7 & 0x01);
-		a[1]=(byte) (b>>6 & 0x01);
-		a[2]=(byte) (b>>5 & 0x01);
-		a[3]=(byte) (b>>4 & 0x01);
-		a[4]=(byte) (b>>3 & 0x01);
-		a[5]=(byte) (b>>2 & 0x01);
-		a[6]=(byte) (b>>1 & 0x01);
-		a[7]=(byte) (b & 0x01);
-		return a;
-	}
-	
-	/**
-	 * Convert a byte array into a bit array. Bits have the same order as the given bytes.
-	 * 
-	 * @param b
-	 * @return
-	 */
-	public static byte[] byteArrayToBitArray(byte[] b){
-		byte[] a=new byte[b.length*8];
-		for (int i = 0; i < b.length; i++) {
-			ByteArrayUtils.replace(a, i*8, byteToBit(b[i]), 0, 8);
-		}
-		return a;
-	}
-	
-	/**
-	 * Convert a byte array into a printable string
-	 * 
-	 * @param i
-	 * @param separator
-	 * @return
+	 * @param i is the byte array
+	 * @param separator is the separator to use between each byte
+	 * @return the string
 	 */
 	public static String byteArrayToStringPrintable(byte[] i,String separator){
 		String s="";
@@ -275,12 +252,11 @@ public class Conversion_NoChecks {
 	}
 	
 	/**
-	 * This method transforms an integer array into a string with integers so that it can be printed to console
-	 * 
-	 * @author Lu�s Lemos
+	 * Transform an int array into a string with integers.
 	 * 
 	 * @param i is the integer array
-	 * @return the ready to print string
+	 * @param separator is the separator to use between each int
+	 * @return the string
 	 */
 	public static String intArrayToStringPrintable(int[] i,String separator){
 		String s="";
@@ -291,6 +267,14 @@ public class Conversion_NoChecks {
 		return s;
 	}
 	
+	/**
+	 * Transform a generic array into a printable string by converting the number 
+	 * in each position of the array into its text equivalent.
+	 * 
+	 * @param i is the array
+	 * @param separator is the separator to use between each position of the array
+	 * @return the string
+	 */
 	public static <T> String arrayToStringPrintable(T[] i,String separator){
 		String s="";
 		for (int j = 0; j < i.length-1; j++) {
@@ -300,6 +284,14 @@ public class Conversion_NoChecks {
 		return s;
 	}
 		
+	/**
+	 * Transform an {@link Iterable} into a printable string by converting the number 
+	 * in each position into its text equivalent.
+	 * 
+	 * @param i is the {@link Iterable} object
+	 * @param separator is the separator to use between each position of the array
+	 * @return the string
+	 */
 	public static <T> String iterableToStringPrintable(Iterable<T> i,String separator){
 		String s="";
 		boolean b=true;
@@ -312,24 +304,48 @@ public class Conversion_NoChecks {
 		return s;
 	}
 		
+	/**
+	 * Convert an int array into a {@link Integer} array.
+	 * 
+	 * @param b is the array to convert
+	 * @return the converted array
+	 */
 	public static Integer[] intArrayToIntegerArray(int[] a) {
 		Integer s[]=new Integer[a.length];
 		for(int i=0;i<a.length;++i) {s[i]=a[i];}
 		return s;
 	}
 
+	/**
+	 * Convert a long array into a {@link Long} array.
+	 * 
+	 * @param b is the array to convert
+	 * @return the converted array
+	 */
 	public static Long[] longArrayToLongArray(long[] a) {
 		Long s[]=new Long[a.length];
 		for(int i=0;i<a.length;++i) {s[i]=a[i];}
 		return s;
 	}
 
+	/**
+	 * Convert a float array into a {@link Float} array.
+	 * 
+	 * @param b is the array to convert
+	 * @return the converted array
+	 */
 	public static Float[] floatArrayToFloatArray(float[] a) {
 		Float s[]=new Float[a.length];
 		for(int i=0;i<a.length;++i) {s[i]=a[i];}
 		return s;
 	}
 
+	/**
+	 * Convert a double array into a {@link Double} array.
+	 * 
+	 * @param b is the array to convert
+	 * @return the converted array
+	 */
 	public static Double[] doubleArrayToDoubleArray(double[] a) {
 		Double s[]=new Double[a.length];
 		for(int i=0;i<a.length;++i) {s[i]=a[i];}

@@ -2,16 +2,22 @@ package jrain.utils;
 
 import java.util.Arrays;
 
+import jrain.array.utils.ByteArrayUtils;
 import jrain.exceptions.ExceptionInvalidValue;
 
+/**
+ * @author poltergeist0
+ *
+ * This class implements static methods that can be used to work with hexadecimals.
+ */
 public class HexadecimalUtils {
 
 	/**
-	 * Convert a byte array to an half byte array. Each input byte is split into
-	 * an half left part and half right part. Performs the inverse operation of
-	 * {@link HexadecimalUtils#convertFromHexHalfByte(byte[])}
+	 * Convert a byte array to an half byte array so that it is ready to convert to text.
+	 * Each input byte is split into an half left part and half right part.
+	 * Performs the inverse operation of {@link HexadecimalUtils#convertFromHexHalfByte(byte[])}.
 	 * 
-	 * @param data
+	 * @param data is the original array
 	 * @return a byte array with the half bytes
 	 */
 	public static byte[] convertToHexHalfByte(final byte[] data) {
@@ -171,6 +177,26 @@ public class HexadecimalUtils {
 		return convertFromHexHalfByte(convertCharToHalfByteNoError(Conversion_NoChecks.stringToCharArray(data)));
     }
 	
+	/**
+	 * Convert a byte into a bit array.
+	 * Each bit is stored in a byte so the result is returned in a byte array.
+	 * 
+	 * @param b is the byte to convert
+	 * @return is the bit array
+	 */
+	public static byte[] byteToBit(byte b){
+		byte[] a=new byte[8];
+		a[0]=(byte) (b>>7 & 0x01);
+		a[1]=(byte) (b>>6 & 0x01);
+		a[2]=(byte) (b>>5 & 0x01);
+		a[3]=(byte) (b>>4 & 0x01);
+		a[4]=(byte) (b>>3 & 0x01);
+		a[5]=(byte) (b>>2 & 0x01);
+		a[6]=(byte) (b>>1 & 0x01);
+		a[7]=(byte) (b & 0x01);
+		return a;
+	}
+	//TODO: check which of these two (above and below) are faster and remove the other
 	public static byte[] convertToBinary(final byte data){
 		byte d[]=new byte[8];
 		int b=data;
@@ -180,7 +206,23 @@ public class HexadecimalUtils {
 		}
 		return d;
 	}
-	
+
+	/**
+	 * Convert a byte array into a bit array. Same as {@link #byteToBit(byte)} but
+	 * for multiple bytes.
+	 * Bits have the same order as the given bytes.
+	 * 
+	 * @param b is the byte array
+	 * @return a bit array
+	 */
+	public static byte[] byteArrayToBitArray(byte[] b){
+		byte[] a=new byte[b.length*8];
+		for (int i = 0; i < b.length; i++) {
+			ByteArrayUtils.replace(a, i*8, byteToBit(b[i]), 0, 7);//replace call writes bits to proper location
+		}
+		return a;
+	}
+	//TODO: check which of these two (above and below) are faster and remove the other
 	public static byte[] convertToBinary(final byte[] data){
 		byte d[]=new byte[data.length*8];
 		int b;
