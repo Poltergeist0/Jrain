@@ -48,9 +48,10 @@ public class ArrayListEntry<TYPE_KEY,TYPE_DATA> extends ArrayList<Entry<TYPE_KEY
 	 * Get the keys of all {@link Entry}s in the {@link ArrayList}
 	 * @return a list with the keys
 	 */
-	public ArrayList<TYPE_KEY> getKeys(){
+	public static <TYPE_KEY extends Object,TYPE_DATA extends Object,TYPE_LIST extends ArrayList<Entry<TYPE_KEY,TYPE_DATA>>> 
+	ArrayList<TYPE_KEY> getKeys(TYPE_LIST lst){
 		ArrayList<TYPE_KEY> a=new ArrayList<>();
-		Iterator<Entry<TYPE_KEY, TYPE_DATA>> it = iterator();
+		Iterator<Entry<TYPE_KEY, TYPE_DATA>> it = lst.iterator();
 		while(it.hasNext()) {
 			Entry<TYPE_KEY, TYPE_DATA> e = it.next();
 			a.add(e.getKey());
@@ -62,13 +63,30 @@ public class ArrayListEntry<TYPE_KEY,TYPE_DATA> extends ArrayList<Entry<TYPE_KEY
 	 * Get the values of all {@link Entry}s in the {@link ArrayList}
 	 * @return a list with the values
 	 */
-	public ArrayList<TYPE_DATA> getValues(){
+	public static <TYPE_KEY extends Object,TYPE_DATA extends Object,TYPE_LIST extends ArrayList<Entry<TYPE_KEY,TYPE_DATA>>> 
+	ArrayList<TYPE_DATA> getValues(TYPE_LIST lst){
 		ArrayList<TYPE_DATA> a=new ArrayList<>();
-		Iterator<Entry<TYPE_KEY, TYPE_DATA>> it = iterator();
+		Iterator<Entry<TYPE_KEY, TYPE_DATA>> it = lst.iterator();
 		while(it.hasNext()) {
 			Entry<TYPE_KEY, TYPE_DATA> e = it.next();
 			a.add(e.getValue());
 		}
 		return a;
+	}
+
+	/**
+	 * Get the keys of all {@link Entry}s in the {@link ArrayList}
+	 * @return a list with the keys
+	 */
+	public ArrayList<TYPE_KEY> getKeys(){
+		return getKeys(this);
+	}
+
+	/**
+	 * Get the values of all {@link Entry}s in the {@link ArrayList}
+	 * @return a list with the values
+	 */
+	public ArrayList<TYPE_DATA> getValues(){
+		return getValues(this);
 	}
 }

@@ -18,7 +18,9 @@ import jrain.arrayList.utils.ArrayListUtils;
  */
 public class PairOfArrayList<
 	TYPE_KEY extends Object,
-	TYPE_DATA extends Object
+	TYPE_DATA extends Object,
+	TYPE_KEY_LIST extends ArrayList<TYPE_KEY>,
+	TYPE_DATA_LIST extends ArrayList<TYPE_DATA>
 > 
 extends PairOfLists<TYPE_KEY,TYPE_DATA,ArrayList<TYPE_KEY>,ArrayList<TYPE_DATA>>{
 
@@ -45,7 +47,7 @@ extends PairOfLists<TYPE_KEY,TYPE_DATA,ArrayList<TYPE_KEY>,ArrayList<TYPE_DATA>>
 	 * @param key is the key
 	 * @param value is the value
 	 */
-	public PairOfArrayList(final ArrayList<TYPE_KEY> key, final ArrayList<TYPE_DATA> value) {
+	public PairOfArrayList(final TYPE_KEY_LIST key, final TYPE_DATA_LIST value) {
 		super(key,value);
     }
 
@@ -71,13 +73,13 @@ extends PairOfLists<TYPE_KEY,TYPE_DATA,ArrayList<TYPE_KEY>,ArrayList<TYPE_DATA>>
 	 * @param p is the given object
 	 * @param deepCopy if true, makes a deep copy, otherwise makes a shallow copy
 	 */
-	public <U extends PairOfArrayList<TYPE_KEY,TYPE_DATA> > 
+	public <U extends PairOfArrayList<TYPE_KEY,TYPE_DATA,TYPE_KEY_LIST,TYPE_DATA_LIST> > 
 	PairOfArrayList(U p,boolean deepCopy){
 		super((deepCopy)?p.deepCopy():p);
 	}
 
 	@Override
-	public PairOfArrayList<TYPE_KEY,TYPE_DATA> deepCopy() {
+	public PairOfArrayList<TYPE_KEY,TYPE_DATA,TYPE_KEY_LIST,TYPE_DATA_LIST> deepCopy() {
 		return new PairOfArrayList<>(this, true);
 	}
 	

@@ -162,8 +162,8 @@ public class Conversion_NoChecks {
 	 * @return a string array
 	 * @throws IndexOutOfBoundsException if end<start or start<0 or end>length of string
 	 */
-	public static String[] stringToStringArray(String str,String separator,int start,int end)throws IndexOutOfBoundsException{
-		if(end<start || start<0 || end>str.length()) throw new IndexOutOfBoundsException();
+	public static String[] stringToStringArray(String str,String separator,int start,int end) {//throws IndexOutOfBoundsException{
+//		if(end<start || start<0 || end>str.length()) throw new IndexOutOfBoundsException();
 		ArrayList<String> a=new ArrayList<>();
 		if(!"".equals(str)){
 			int prev=start;

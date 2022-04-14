@@ -98,7 +98,6 @@ public class ImmutableListUtils{
 	 * @return a new {@link ImmutableList} with the values removed
 	 */
 	public static <E> ImmutableList<E> remove(final ImmutableList<E> original, final ImmutableList<E> data){
-//		if(data==null)return original;
 		ImmutableList.Builder<E> b=new ImmutableList.Builder<>();
 		UnmodifiableIterator<E> it=original.iterator();
 		E i=null;
