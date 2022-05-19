@@ -21,6 +21,9 @@ public class HexadecimalUtils_Test {
 	private final char[] c1={'0','9','a','f','A','F'};
 	private final byte[] hb0={10,0,1,3,7,15};
 	private final char[] c2={'0','9','a','t'};
+	private final byte[] bn0={(byte) 1,0,1,0,0,0,0,0};
+	private final byte[] bn1={(byte) 1,0,1,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,1,1,1,1,1,1};
+	private final byte[] bn2={(byte) 1,0,1,0};
 	
 //	@Rule
 //	public ExpectedException exception = ExpectedException.none();
@@ -121,6 +124,41 @@ public class HexadecimalUtils_Test {
 	@Test
 	public void testConvertFromHexNoError() {
 		assertArrayEquals(b0, HexadecimalUtils.convertFromHexNoError(HexadecimalUtils.convertToHex(b0)));
+	}
+
+	@Test
+	public void testConvertByteToBinaryDeclared() {
+		byte[] bb=new byte[8];
+//		for (int i = 0; i < bb.length; i++) {bb[i]=0;}
+		HexadecimalUtils.convertByteToBinary(b0[0],bb,0,7);
+		assertArrayEquals(bn0, bb);
+		byte[] bb1=new byte[4];
+//		for (int i = 0; i < bb.length; i++) {bb[i]=0;}//reset
+		HexadecimalUtils.convertByteToBinary(b1[2],bb1,0,3);
+		assertArrayEquals(bn2, bb1);
+	}
+
+	@Test
+	public void testConvertByteToBinary() {
+		assertArrayEquals(bn0, HexadecimalUtils.convertByteToBinary(b0[0]));
+	}
+
+	@Test
+	public void testConvertBinaryToByte() {
+		assertEquals(b0[0],(byte) HexadecimalUtils.convertBinaryToByte(bn0));
+	}
+
+	@Test
+	public void testConvertByteArrayToBinary() {
+		assertArrayEquals(bn1, HexadecimalUtils.convertByteToBinary(b0));
+	}
+
+	@Test
+	public void testConvertBinaryToByteArray() {
+		assertArrayEquals(b0, HexadecimalUtils.convertBinaryToByteArray(bn1));
+		byte[] bb=new byte[1];
+		bb[0]=hb0[0];
+		assertArrayEquals(bb, HexadecimalUtils.convertBinaryToByteArray(bn2));
 	}
 
 }
