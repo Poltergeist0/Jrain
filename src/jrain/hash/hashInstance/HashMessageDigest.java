@@ -1,0 +1,46 @@
+package jrain.hash.hashInstance;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
+import java.util.Set;
+
+import jrain.polyType.hash.immutable.MessageDigestPoly;
+
+/**
+ * @author poltergeist0
+ *
+ * Interface that must be implemented by classes that represent a {@link MessageDigest} 
+ * hash instance.
+ * 
+ * Defines methods to check if a given hash is provided by {@link MessageDigest}.
+ */
+public interface HashMessageDigest extends HashInstance{
+
+	/**
+	 * @return a set with the names of the hash algorithms provided by {@link MessageDigest}
+	 */
+	public static Set<String> algorithms(){return Security.getAlgorithms("MessageDigest");}
+
+	/**
+	 * @param a is the name of a hash algorithm
+	 * @return true if {@link MessageDigest} provides that algorithm
+	 */
+	public static boolean hasAlgorithm(String a){return algorithms().contains(a);}
+
+	/**
+	 * Get a {@link MessageDigest} instance corresponding to the requested hash algorithm 
+	 * or null if the hash algorithm is not provided by {@link MessageDigest}
+	 * 
+	 * @param s is the name of a hash algorithm
+	 * @return a MessageDigest instance or null
+	 */
+	public static MessageDigestPoly instance(String s) {
+		try {
+			return new MessageDigestPoly(MessageDigest.getInstance(s));
+		} catch (NoSuchAlgorithmException e) {
+			return null;
+		}
+	}
+	
+}

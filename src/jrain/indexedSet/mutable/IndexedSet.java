@@ -16,6 +16,7 @@ import jrain.entry.mutable.PairOfArrayList;
  * @author poltergeist0
  *
  * Set where the values have an associated key.
+ * This set, unlike the standard set, is indexed by key instead of by value.
  * Insertion order is not preserved.
  * 
  * @param <TYPE_KEY> is the data type to be used for the key
@@ -62,7 +63,7 @@ public abstract class IndexedSet<
 	/**
 	 * Get the entry associated with a cell.
 	 * Behavior is undefined when the cell does not exist.
-	 * This method does not check if the cell exists to avoid duplicate checking.
+	 * This method does not check if the cell exists to avoid double checking.
 	 * 
 	 * @param k is the key of the cell
 	 * @return the entry of the requested cell
@@ -400,12 +401,12 @@ public abstract class IndexedSet<
 	/**
 	 * Copy constructor.
 	 * 
-	 * @param <TYPE_TABLE> is the data type of the class that extends {@link IndexedSet}
+	 * @param <TYPE_SET> is the data type of the class that extends {@link IndexedSet}
 	 * @param t is the original {@link IndexedSet}
 	 * @param deepCopy if true attempts to perform a deep copy of the cells
 	 */
-	public <TYPE_TABLE extends IndexedSet<TYPE_KEY,TYPE_DATA>> 
-	IndexedSet(TYPE_TABLE t,boolean deepCopy){
+	public <TYPE_SET extends IndexedSet<TYPE_KEY,TYPE_DATA>> 
+	IndexedSet(TYPE_SET t,boolean deepCopy){
 		cells=(deepCopy)?DeepCopy.deepCopy(t.internal()):new HashMap<TYPE_KEY,TYPE_DATA>(t.internal());
 	}
 	
@@ -414,18 +415,18 @@ public abstract class IndexedSet<
 	 * Uses a given {@link IndexedSet} as source for data and only adds 
 	 * cells that pass the predicate test
 	 * 
-	 * @param <TYPE_TABLE> is the data type of the class that extends {@link IndexedSet}
+	 * @param <TYPE_SET> is the data type of the class that extends {@link IndexedSet}
 	 * @param <TYPE_PREDICATE> is the data type of the class that extends {@link Predicate}
 	 * @param t is the original {@link IndexedSet}
 	 * @param pre is the predicate that selects which rows are copied
 	 * @param deepCopy if true attempts to perform a deep copy of the cells
 	 */
 	public <
-		TYPE_TABLE extends IndexedSet<TYPE_KEY,TYPE_DATA>, 
+		TYPE_SET extends IndexedSet<TYPE_KEY,TYPE_DATA>, 
 		TYPE_PREDICATE extends Predicate<Entry<TYPE_KEY,TYPE_DATA> >
 	> 
 	IndexedSet(
-			TYPE_TABLE t,
+			TYPE_SET t,
 			TYPE_PREDICATE pre,
 			boolean deepCopy
 			)
@@ -453,7 +454,7 @@ public abstract class IndexedSet<
 		
 	/**
 	 * 
-	 * @param <TYPE_HEADER_DATA> must be either a primitive value or a class extending Value
+	 * @param <TYPE_HEADER_DATA> must be either a primitive value or a class extending TYPE_DATA
 	 * @param <TYPE_HEADER_CELL>
 	 * @param <TYPE_HEADER_TABLE>
 	 * @param s is a {@link StringBuilder}
@@ -584,23 +585,41 @@ public abstract class IndexedSet<
 	protected HashMap<TYPE_KEY,TYPE_DATA > internal(){return cells;}
 
 	/**
-	 * Define how to get the value from the data type.
+	 * Define how to get TYPE_DATA from the given object.
+	 * The given object must extend TYPE_DATA.
 	 * 
 	 * Example for simple data:
 	 * {@code
 	 * 		...
 	 * 		IndexedSet<Integer, Integer> bla;
 	 * 		...
+	 * 		SomeMethod(){
+	 * 			...
+	 * 			Entry<Integer, Integer> a=get(someKey);
+	 * 			...
+	 * 			typeDataGetValue(a.value());
+	 * 			...
+	 * 		}
+	 * 		...
 	 * 		protected Integer typeDataGetValue(Object v){return (Integer)v;}
 	 * 		...
 	 * }
 	 * 
+	 * TODO: review this example. It is confusing. Entry does not extend integer.
 	 * Example for complex data:
 	 * {@code
 	 * 		...
-	 * 		IndexedSet<Integer, HashMap<Byte,Integer> > bla;
+	 * 		IndexedSet<Integer, Entry<Byte,Integer> > bla;
 	 * 		...
-	 * 		protected Integer typeDataGetValue(Object v){return ((HashMap<Byte,Integer>)v).value();}
+	 * 		SomeMethod(){
+	 * 			...
+	 * 			Entry<Integer, Entry<Byte,Integer> > a=get(someKey);
+	 * 			...
+	 * 			typeDataGetValue(a.value());
+	 * 			...
+	 * 		}
+	 * 		...
+	 * 		protected Integer typeDataGetValue(Object v){return ((Entry<Byte,Integer>)v).value();}
 	 * 		...
 	 * }
 	 * 
