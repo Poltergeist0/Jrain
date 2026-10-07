@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.taggedTable;
 
 import java.util.Iterator;
@@ -24,7 +39,7 @@ public interface SnapshotDescriptorTaggedTable{
 	 * @return a {@link TaggedTableHeader} with the columns of a {@link SnapshotDescriptor}
 	 */
 	public static TaggedTableHeader taggedTableColumns(){
-		TaggedTableHeader a=BaseSnapshotsDescriptorTaggedTable.taggedTableColumns();
+		TaggedTableHeader a=FileSystemObjectDescriptorTaggedTable.taggedTableColumns();
 		a.add(jrain.filesystem.snapshot.SnapshotDescriptor.tagSnapshotBasePath, new TaggedTableColumnData<PolyType<?>>(new StringPoly(jrain.filesystem.snapshot.SnapshotDescriptor.defaultBasePath)), false);
 		a.add(jrain.filesystem.snapshot.SnapshotDescriptor.tagSnapshotRecursion, new TaggedTableColumnData<PolyType<?>>(new IntegerPoly(jrain.filesystem.snapshot.SnapshotDescriptor.defaultRecursion)), false);
 		a.add(TaggedTableHashes.taggedTableColumns(jrain.filesystem.snapshot.SnapshotDescriptor.tagSnapshotCalculate, new BooleanPoly(false)), false);
@@ -39,7 +54,7 @@ public interface SnapshotDescriptorTaggedTable{
 	 */
 	public static TaggedTableRow taggedTableRows(SnapshotDescriptor d){
 		TaggedTableRow b = new TaggedTableRow(d);
-		b.add(BaseSnapshotsDescriptorTaggedTable.taggedTableRows(d),false);
+		b.add(FileSystemObjectDescriptorTaggedTable.taggedTableRows(d),false);
 		b.add(jrain.filesystem.snapshot.SnapshotDescriptor.tagSnapshotBasePath,new StringPoly(d.getBasePath()),true);
 		b.add(jrain.filesystem.snapshot.SnapshotDescriptor.tagSnapshotRecursion, new IntegerPoly(d.getRecursion()),true);
 		Iterator<String> it = d.hashes().iterator();

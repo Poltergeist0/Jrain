@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.immutable;
 
 import java.time.LocalDateTime;
@@ -8,20 +23,20 @@ import java.util.UUID;
  *
  * Directory descriptor.
  * 
- * Extends {@link BaseSnapshotsDescriptor}.
+ * Extends {@link FileSystemObjectDescriptor}.
  * 
  * Defines additional fields: path, creation/modification/access date and time, 
  * and a flag stating if it is readable from filesystem
  */
-public class DirectoryDescriptor extends BaseSnapshotsDescriptor implements jrain.filesystem.snapshot.DirectoryDescriptor{
+public class DirectoryDescriptor extends FileSystemObjectDescriptor implements jrain.filesystem.snapshot.DirectoryDescriptor{
 	
-	/**
-	 * logical path of the file on the hard disk (example: "c:\windows" or 
-	 * "/mount/qwerty"). Informative field only that is not/should not be used 
-	 * in any processing
-	 */
-	private final String pth;
-	
+//	/**
+//	 * logical path of the file on the hard disk (example: "c:\windows" or 
+//	 * "/mount/qwerty"). Informative field only that is not/should not be used 
+//	 * in any processing
+//	 */
+//	private final String pth;
+//	
 	/**
 	 * creation date
 	 */
@@ -39,6 +54,7 @@ public class DirectoryDescriptor extends BaseSnapshotsDescriptor implements jrai
 	
 	/**
 	 * Flag that indicates if the directory is readable
+	 * Used only for snapshots loaded from file
 	 */
 	private final boolean readable;
 	
@@ -64,8 +80,8 @@ public class DirectoryDescriptor extends BaseSnapshotsDescriptor implements jrai
 			LocalDateTime lastAccessDateTime,
 			Boolean canRead
 			) {
-		super(uuid,name,size);
-		pth=(path==null)?defaultPath:path;
+		super(uuid,name,size,path);
+//		pth=(path==null)?defaultPath:path;
 		if(creationDateTime==null) creation=defaultCreationDateTime;
 		else creation=creationDateTime;
 		if(lastModificationDateTime==null) modification=defaultModificationDateTime;
@@ -103,8 +119,8 @@ public class DirectoryDescriptor extends BaseSnapshotsDescriptor implements jrai
 			LocalDateTime LastAccessDateTime,
 			Boolean canRead
 			){
-		super(original,copyUUID,name,size);
-		pth=(path==null)?original.getPath():path;
+		super(original,copyUUID,name,size,path);
+//		pth=(path==null)?original.getPath():path;
 		if(CreationDateTime==null) creation=original.getCreationDateTime();
 		else creation=CreationDateTime;
 		if(LastModificationDateTime==null) modification=original.getLastModificationDateTime();
@@ -115,12 +131,12 @@ public class DirectoryDescriptor extends BaseSnapshotsDescriptor implements jrai
 		else readable=canRead;
 	}
 	
-	public String getPath(){return pth;}
-	
-	public String getFullPath(String separator){
-		return getPath()+separator+getDescriptorName();
-	}
-	
+//	public String getPath(){return pth;}
+//	
+//	public String getFullPath(String separator){
+//		return getPath()+separator+getDescriptorName();
+//	}
+//	
 	public LocalDateTime getCreationDateTime() {return creation;}
 
 	public LocalDateTime getLastModificationDateTime() {return modification;}

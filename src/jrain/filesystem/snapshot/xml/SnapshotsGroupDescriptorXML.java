@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.xml;
 
 import java.util.Map.Entry;
@@ -6,10 +21,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import jrain.filesystem.snapshot.immutable.BaseSnapshotsDescriptor;
+import jrain.filesystem.snapshot.immutable.BaseDescriptor;
 import jrain.filesystem.snapshot.immutable.SnapshotsGroupDescriptor;
 import jrain.xml.XML;
-import jrain.identifiable.Identifiable;
+import jrain.identifiable.immutable.Identifiable;
 import jrain.entry.mutable.Pair;
 
 /**
@@ -19,7 +34,7 @@ import jrain.entry.mutable.Pair;
  */
 public interface SnapshotsGroupDescriptorXML {
 	public static final String XMLSNAPSHOTSGROUPTAG=SnapshotsGroupDescriptor.tagSnapshotsGroup;
-	public static final String XMLSNAPSHOTSGROUPFILENAMETAG=SnapshotsGroupDescriptor.tagSnapshotsGroupFileName;
+//	public static final String XMLSNAPSHOTSGROUPFILENAMETAG=SnapshotsGroupDescriptor.tagSnapshotsGroupFileName;
 	
 	/**
 	 * Read the file name part of the {@link SnapshotsGroupDescriptor}
@@ -28,15 +43,27 @@ public interface SnapshotsGroupDescriptorXML {
 	 * @return a {@link String} with the file name or null if it could not be read
 	 * @throws XMLStreamException
 	 */
-	private static String readFileName(XMLStreamReader reader) throws XMLStreamException {
-		//assume that reader is already at a START_ELEMENT
-		String s=XML.readSimpleElementText(reader, XMLSNAPSHOTSGROUPFILENAMETAG);
-		if(s!=null) {
-			return s;
-		}
-		return null;
-	}
+//	private static String readFileName(XMLStreamReader reader) throws XMLStreamException {
+//		//assume that reader is already at a START_ELEMENT
+//		String s=XML.readSimpleElementText(reader, XMLSNAPSHOTSGROUPFILENAMETAG);
+//		if(s!=null) {
+//			return s;
+//		}
+//		return null;
+//	}
 
+	/**
+	 * Construct a {@link SnapshotsGroupDescriptor} from the individual fields and some extra information.
+	 * 
+	 * @param uid is an optional UUID to be used
+	 * @param name is the name of the object
+	 * @param size is the sum of the sizes of all sub objects in the object
+	 * @return an {@link Entry} with the key being the {@link Identifiable} read from the file and the value being the {@link BaseDescriptor} with a new {@link Identifiable}
+	 */
+	public static Entry<Identifiable, SnapshotsGroupDescriptor> getFileSystemObjectDescriptor(Identifiable uid,Entry<Identifiable, Identifiable> id, String name,Long size,String path) {
+		return new Pair<>(id.getKey(), new SnapshotsGroupDescriptor(((uid==null)?id.getValue().identifier():uid.identifier()), name, path, size));
+	}
+	
 	/**
 	 * Read a {@link SnapshotsGroupDescriptor} from a XML stream
 	 * 
@@ -50,18 +77,22 @@ public interface SnapshotsGroupDescriptorXML {
 		String s=reader.getLocalName();
 		if(!s.equals(XMLSNAPSHOTSGROUPTAG)) return null;//not a directory
 		XML.advance(reader);
-		Entry<jrain.identifiable.immutable.Identifiable, BaseSnapshotsDescriptor> base=null;
-		String filename=null;
-		int tries=2;//number of fields
-		while(base==null || filename==null) {
-			if(base==null) base=BaseSnapshotsDescriptorXML.readBaseSnapshotsDescriptor(reader, Identifiable.objectTypeOf(SnapshotsGroupDescriptor.class),uid);
-			if(filename==null) filename=readFileName(reader);
-			if(tries<=0 && base==null && filename==null) {//none of the tags exist. After one attempt to read all are null
+		Entry<jrain.identifiable.immutable.Identifiable, jrain.identifiable.immutable.Identifiable> id=null;
+		String name=null;
+		Long size=null;
+		String path=null;
+		int tries=4;//number of fields
+		while(id==null || name==null || size==null || path==null) {
+			if(id==null) id=BaseDescriptorXML.readID(reader, jrain.identifiable.Identifiable.objectTypeOf(SnapshotsGroupDescriptor.class));
+			if(name==null) name=BaseDescriptorXML.readName(reader);
+			if(size==null) size=BaseDescriptorXML.readSize(reader);
+			if(path==null) path=FileSystemObjectDescriptorXML.readPath(reader);
+			if(tries<=0) {//none of the tags exist. After one attempt to read all are null
 				return null;
 			}
 			--tries;
 		}
-		return new Pair<>(base.getKey(), new SnapshotsGroupDescriptor(base.getValue().identifier(), base.getValue().getDescriptorName(),filename, base.getValue().getDescriptorSize()));
+		return getFileSystemObjectDescriptor(uid, id, name, size,path);
 	}
 
 	/**
@@ -77,8 +108,8 @@ public interface SnapshotsGroupDescriptorXML {
 		out.writeCharacters(tabbing);
 		out.writeStartElement(XMLSNAPSHOTSGROUPTAG);
 		out.writeCharacters("\n");
-		BaseSnapshotsDescriptorXML.writeBaseSnapshotsDescriptor(out, id,tabbing+"\t");
-		XML.writeSimpleElementText(out, XMLSNAPSHOTSGROUPFILENAMETAG, id.getFilename(),tabbing+"\t");
+		FileSystemObjectDescriptorXML.writeFileSystemObjectDescriptor(out, id,tabbing+"\t");
+//		XML.writeSimpleElementText(out, XMLSNAPSHOTSGROUPFILENAMETAG, id.getFilename(),tabbing+"\t");
 		return true;
 	}
 }

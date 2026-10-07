@@ -1,18 +1,36 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.differentialHistory.immutable;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 import jrain.indexedSequence.mutable.IndexedSequence;
+import jrain.indexedSet.mutable.IndexedSet;
 import jrain.entry.mutable.PairOfArrayList;
 
 /**
  * @author poltergeist0
  * 
- * Class used to work with historical/log data.
+ * Class used to work with lossy historical/log data.
  * It keeps track of all active markers.
  * A marker is a reference to an object.
  * If no markers are requested, it only keeps track of the first and the last markers.
@@ -46,6 +64,8 @@ public class DifferentialHistory<T> {
 	 * List of values to be used internally
 	 */
 	public class InnerList extends IndexedSequence<T, Integer>{
+		
+		private long totalChanges=0;
 
 		public InnerList(){
 			super();
@@ -55,6 +75,58 @@ public class DifferentialHistory<T> {
 			super(lst,true);
 		}
 
+		@Override
+		public ArrayList<Entry<T, Integer>> add(T k,Integer v,boolean overwrite){
+			totalChanges++;
+			return super.add(k, v, overwrite);
+		}
+		
+		@Override
+		public <U extends Entry<T, Integer>> ArrayList<Entry<T,Integer>> add(U e,boolean overwrite){
+			totalChanges++;
+			return super.add(e, overwrite);
+		}
+		
+		@Override
+		public <U extends IndexedSet<T, Integer>> 
+		ArrayList<Entry<T, Integer>> add(U t,boolean overwrite){
+			totalChanges++;
+			return super.add(t, overwrite);
+		}
+
+		@Override
+		public <U extends Entry<T, Integer>, V extends Collection<U> > 
+		ArrayList<Entry<T, Integer>> add(V c,boolean overwrite){
+			totalChanges++;
+			return super.add(c, overwrite);
+		}
+
+		@Override
+		public <TYPE_TABLE extends IndexedSet<T, Integer>, TYPE_PREDICATE extends Predicate<Entry<T, Integer>>> 
+		ArrayList<Entry<T, Integer> > add(
+				TYPE_TABLE t,
+				TYPE_PREDICATE pre,
+				boolean overwrite
+				)
+		{
+			totalChanges++;
+			return super.add(t, pre, overwrite);
+		}
+
+		@Override
+		public <TYPE_TABLE extends IndexedSet<T, Integer>, TYPE_PREDICATE extends Predicate<Entry<T, Integer>>> 
+		ArrayList<Entry<T, Integer>> add(
+				TYPE_TABLE t,
+				TYPE_PREDICATE pre,
+				boolean overwrite,boolean deepCopy
+				)
+		{
+			totalChanges++;
+			return super.add(t, pre, overwrite, deepCopy);
+		}
+		
+		public long eventCount() {return totalChanges;}
+		
 		/* (non-Javadoc)
 		 * @see java.lang.Object#hashCode()
 		 */
@@ -197,6 +269,19 @@ public class DifferentialHistory<T> {
 				lastRead=false;
 				return true;
 			}
+		}
+		
+		/**
+		 * Get the amount of total history events, even those before the creation of the current marker.
+		 * 
+		 * @return a long with the number of events
+		 */
+		public Long eventCount() {
+			Long a=null;
+			synchronized(lockInnerList) {
+				a=his.eventCount();
+			}
+			return a;
 		}
 		
 		/**

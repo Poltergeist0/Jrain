@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.taggedTable;
 
 import jrain.filesystem.snapshot.immutable.SnapshotsGroupDescriptor;
@@ -20,8 +35,8 @@ public interface SnapshotsGroupDescriptorTaggedTable{
 	 */
 	public static TaggedTableHeader taggedTableColumns(){
 		TaggedTableHeader a=new TaggedTableHeader();
-		a.add(BaseSnapshotsDescriptorTaggedTable.taggedTableColumns(), false);
-		a.add(jrain.filesystem.snapshot.SnapshotsGroupDescriptor.tagSnapshotsGroupFileName, new TaggedTableColumnData<PolyType<?>>(new StringPoly(jrain.filesystem.snapshot.SnapshotsGroupDescriptor.defaultSnapshotsGroupFileName)), false);
+		a.add(BaseDescriptorTaggedTable.taggedTableColumns(), false);
+		a.add(jrain.filesystem.snapshot.SnapshotsGroupDescriptor.defaultPath, new TaggedTableColumnData<PolyType<?>>(new StringPoly(jrain.filesystem.snapshot.SnapshotsGroupDescriptor.defaultSnapshotsGroupFileName)), false);
 		return a;
 	}
 	
@@ -33,8 +48,8 @@ public interface SnapshotsGroupDescriptorTaggedTable{
 	 */
 	public static TaggedTableRow taggedTableRows(SnapshotsGroupDescriptor d){
 		TaggedTableRow b = new TaggedTableRow(d);
-		b.add(BaseSnapshotsDescriptorTaggedTable.taggedTableRows(d),false);
-		b.add(jrain.filesystem.snapshot.SnapshotsGroupDescriptor.tagSnapshotsGroupFileName,new StringPoly(d.getFilename()),true);
+		b.add(BaseDescriptorTaggedTable.taggedTableRows(d),false);
+		b.add(jrain.filesystem.snapshot.SnapshotsGroupDescriptor.defaultPath,new StringPoly(d.getPath()),true);
 		return b;
 	}
 	

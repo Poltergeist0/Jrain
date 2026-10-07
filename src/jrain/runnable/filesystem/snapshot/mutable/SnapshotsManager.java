@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.runnable.filesystem.snapshot.mutable;
 
 import java.io.FileWriter;
@@ -8,7 +23,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import jrain.filesystem.snapshot.immutable.SnapshotsGroupDescriptor;
@@ -18,6 +32,7 @@ import jrain.hash.hashInstance.hashes.Hashes;
 import jrain.runnable.filesystem.snapshot.mutable.SnapshotsAction.ACTIONTYPE;
 import jrain.exceptions.ExceptionInvalidValue;
 import jrain.exceptions.ExceptionProcessing;
+import jrain.NumberWithMultiple.ByteSizeWithMultiple;
 import jrain.differentialHistory.immutable.DifferentialHistory;
 import jrain.differentialHistory.immutable.DifferentialHistory.HistoryMarkerSet;
 import jrain.identifiable.immutable.Identifiable;
@@ -80,7 +95,7 @@ public class SnapshotsManager extends RunnableStepByStep{
 
 	private final Set<String> defaultHashes;
 	
-	private final int bufferSize;
+	private final ByteSizeWithMultiple bufferSize;
 	
 	/**
 	 * Initializes a snapshot manager with global settings
@@ -91,7 +106,7 @@ public class SnapshotsManager extends RunnableStepByStep{
 	 */
 	public SnapshotsManager(
 			Set<String> hashes,
-			int BufferSize
+			ByteSizeWithMultiple BufferSize
 			) throws Exception {
 		super();
 		snapshots=new ConcurrentHashMap<>();
@@ -99,7 +114,7 @@ public class SnapshotsManager extends RunnableStepByStep{
 //		snapshotsStatistics=new ConcurrentHashMap<>();
 		sal=null;
 		defaultHashes=Hashes.validateHashes(hashes);
-		bufferSize=BufferSize;
+		bufferSize=(BufferSize==null)?new ByteSizeWithMultiple():BufferSize;
 		super.go();
 	}
 
@@ -377,10 +392,10 @@ public class SnapshotsManager extends RunnableStepByStep{
 		return getGroup(id).save(fileName,append);
 	}
 	
-	public <T extends Identifiable> Identifiable newSnapshot(T snapshotsGroupID,final String snapshotName,final String pathToSnapshot, Set<String> hashes,int recursion) throws Exception{
+	public <T extends Identifiable> Identifiable newSnapshot(T snapshotsGroupID,final String snapshotName,final String pathToSnapshot, Set<String> hashes,ByteSizeWithMultiple byteCount,int recursion) throws Exception{
 		SnapshotsMaker sm=getGroup(snapshotsGroupID);
 		if(sm!=null){
-			Identifiable b = sm.addSnapshot(snapshotName, pathToSnapshot, null, (hashes==null)?defaultHashes:hashes, recursion, bufferSize);
+			Identifiable b = sm.addSnapshot(snapshotName, pathToSnapshot, null, (hashes==null)?defaultHashes:Hashes.validateHashes(hashes), byteCount, recursion, bufferSize);
 			go();
 			return b;
 		}

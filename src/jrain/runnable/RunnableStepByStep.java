@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.runnable;
 
 
@@ -26,7 +41,9 @@ import jrain.runnable.RunnableStepByStepStatistics.FIELD;
  * 
  * Call the {@link RunnableStepByStep#process()} method to execute the code when 
  * not using a {@link Thread}, as opposed to the {@link Runnable#run()} method 
- * used by {@link Runnable}.
+ * used by {@link Runnable}. This provides feedback using an additional flag named 
+ * processing to signal when the main program should evaluate instead of keep
+ * calling {@link RunnableStepByStep#process()}.
  * 
  * Provides methods {@link RunnableStepByStep#initialize()} and {@link RunnableStepByStep#endStep()}
  * to execute code before and after the main code, respectively.
@@ -486,6 +503,9 @@ public abstract class RunnableStepByStep implements Runnable{
 	 * Objects that extend this class should call this method instead of step() when
 	 * running outside of a Thread object. All this method does is set the flag 
 	 * processing to true, call step() and set the flag processing to false.
+	 * Also, unlike {@link RunnableStepByStep#step()} where finalizing/endind/sleeping
+	 * is relegated to the Thread object, this method automatically finalizes/ends 
+	 * the process when no more processing is available (active is set to false).
 	 */
 	protected void process(){
 		evaluateStateConditions();

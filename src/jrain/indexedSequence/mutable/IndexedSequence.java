@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.indexedSequence.mutable;
 
 
@@ -17,12 +32,12 @@ import jrain.arrayList.mutable.ArrayListEntry;
 /**
  * @author poltergeist0
  *
- * Set of columns for use with Tagged Tables.
+ * Set where the values have an associated key.
+ * This set, unlike the standard set, is indexed by key instead of by value.
  * Insertion order is preserved.
- * See {@link TaggedTableCoreCell} for details about cells.
  * 
- * @param <TYPE_KEY> is the data type to be used for the key of all cells
- * @param <TYPE_DATA> is the data type to be used for the value of all cells
+ * @param <TYPE_KEY> is the data type to be used for the key
+ * @param <TYPE_DATA> is the data type to be used for the value
 */
 public abstract class IndexedSequence<
 	TYPE_KEY extends Object,
@@ -31,7 +46,7 @@ public abstract class IndexedSequence<
 extends IndexedSet<TYPE_KEY,TYPE_DATA>{
 	
 	/**
-	 * List with the insertion order of the columns.
+	 * List with the insertion order of the values.
 	 * It is an array list instead of an HashMap to prevent having to 
 	 * recalculate every time a column is removed from the middle.
 	 */
@@ -178,7 +193,7 @@ extends IndexedSet<TYPE_KEY,TYPE_DATA>{
 	}
 	
 	/**
-	 * Create an empty ordered tagged table list
+	 * Empty constructor
 	 */
 	public IndexedSequence(){
 		super();
@@ -186,7 +201,7 @@ extends IndexedSet<TYPE_KEY,TYPE_DATA>{
 	}
 	
 	/**
-	 * Copy constructor from unordered tagged table.
+	 * Copy constructor from {@link IndexedSet}
 	 * 
 	 * @param <TYPE_TABLE> is the data type of the class that extends {@link IndexedSet}
 	 * @param t is the {@link IndexedSet} to copy
@@ -199,7 +214,7 @@ extends IndexedSet<TYPE_KEY,TYPE_DATA>{
 	}
 	
 	/**
-	 * Copy constructor from ordered tagged table.
+	 * Copy constructor from {@link IndexedSequence}.
 	 * 
 	 * @param <TYPE_TABLE> is the data type of the class that extends {@link IndexedSequence}
 	 * @param t is the {@link IndexedSequence} to copy

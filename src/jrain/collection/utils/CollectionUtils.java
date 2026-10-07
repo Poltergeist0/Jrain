@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.collection.utils;
 
 import java.util.ArrayList;
@@ -51,6 +66,49 @@ public class CollectionUtils {
 			a.add(e.getValue());
 		}
 		return a;
+	}
+
+	/**
+	 * Convert a collection of Strings to an array of Strings.
+	 * 
+	 * @param <TYPE_LIST> is the type of the collection
+	 * @param lst is the collection
+	 * @return an array of Strings
+	 */
+	public static <TYPE_LIST extends Collection<String> > String[] toArray(TYPE_LIST lst){
+		String[] a=new String[lst.size()];
+		int i=0;
+		Iterator<String> it = lst.iterator();
+		while(it.hasNext()) {
+			String e = it.next();
+			a[i]=e;
+			++i;
+		}
+		return a;
+	}
+
+	/**
+	 * Compare two collections.
+	 * 
+	 * @param <TYPE_DATA> is the type of the collection
+	 * @param <TYPE_LIST> is the type of the collection
+	 * @param lst is the collection
+	 * @return an array of Strings
+	 */
+	public static <TYPE_DATA extends Comparable<? super TYPE_DATA>, TYPE_LIST extends Collection<TYPE_DATA> > int compare(TYPE_LIST lst1, TYPE_LIST lst2){
+		if(lst1.size()<lst2.size())return -1;
+		if(lst1.size()>lst2.size())return 1;
+		Iterator<TYPE_DATA> it1 = lst1.iterator();
+		Iterator<TYPE_DATA> it2 = lst2.iterator();
+		while(it1.hasNext()) {
+			TYPE_DATA d1 = it1.next();
+			TYPE_DATA d2 = it2.next();
+			int a=d1.compareTo(d2);
+			if(a!=0) {
+				return a;
+			}
+		}
+		return 0;
 	}
 
 }

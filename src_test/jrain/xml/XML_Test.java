@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.xml;
 
 import java.io.File;
@@ -218,8 +233,8 @@ public class XML_Test {
 	}
 	
 	public static void parse2() throws XMLStreamException, IOException {
-		long totalSize=(new File("/home/poltergeist0/Desktop/Untitled_merged2.snapshots")).length();
-	    try (FileInputStream fis = new FileInputStream("/home/poltergeist0/Desktop/Untitled_merged2.snapshots")) {
+		long totalSize=(new File("testFiles/deleteMe.snapshots")).length();
+	    try (FileInputStream fis = new FileInputStream("testFiles/deleteMe.snapshots")) {
 	        XMLInputFactory xmlInFact = XMLInputFactory.newInstance();
 	        PublishingInputStream p = new PublishingInputStream(fis);
 	        XMLStreamReader reader = xmlInFact.createXMLStreamReader(p);
@@ -249,7 +264,7 @@ public class XML_Test {
 				        	return;
 				        }
 					}
-		        	System.out.println("sgd={id="+sn.getValue().getSnapshotsGroupDescriptor().identifiable()+" ; name="+sn.getValue().getSnapshotsGroupDescriptor().getDescriptorName()+" ; size="+sn.getValue().getSnapshotsGroupDescriptor().getDescriptorSize()+" ; file name="+sn.getValue().getSnapshotsGroupDescriptor().getFilename()+"}");
+		        	System.out.println("sgd={id="+sn.getValue().getSnapshotsGroupDescriptor().identifiable()+" ; name="+sn.getValue().getSnapshotsGroupDescriptor().getDescriptorName()+" ; size="+sn.getValue().getSnapshotsGroupDescriptor().getDescriptorSize()+" ; file name="+sn.getValue().getSnapshotsGroupDescriptor().getPath()+"}");
 			        //create tree
 			        st=new SnapshotTree(sn.getValue());
 			        parents.add(sn.getValue().identifiable());

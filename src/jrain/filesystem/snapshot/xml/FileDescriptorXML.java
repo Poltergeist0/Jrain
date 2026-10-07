@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.xml;
 
 import java.util.Map.Entry;
@@ -22,6 +37,18 @@ public interface FileDescriptorXML{
 	public static final String XMLFILETAG=FileDescriptor.tagFile;
 
 	/**
+	 * Construct a {@link FileDescriptor} from the individual fields and some extra information.
+	 * 
+	 * @param uid is an optional UUID to be used
+	 * @param name is the name of the object
+	 * @param size is the sum of the sizes of all sub objects in the object
+	 * @return an {@link Entry} with the key being the {@link Identifiable} read from the file and the value being the {@link FileDescriptor} with a new {@link Identifiable}
+	 */
+	public static Entry<jrain.identifiable.immutable.Identifiable, FileDescriptor> getFileDescriptor(Entry<jrain.identifiable.immutable.Identifiable, DirectoryDescriptor> base,Hashes hashes) {
+		return new Pair<>(base.getKey(), new FileDescriptor(base.getValue().identifier(), base.getValue().getDescriptorName(),base.getValue().getPath(), base.getValue().getDescriptorSize(),base.getValue().getCreationDateTime(),base.getValue().getLastModificationDateTime(),base.getValue().getLastAccessDateTime(),base.getValue().isReadable(),hashes));
+	}
+	
+	/**
 	 * Read a {@link FileDescriptor}.
 	 * 
 	 * @param reader is the XML stream reader
@@ -32,7 +59,7 @@ public interface FileDescriptorXML{
 	public static Entry<jrain.identifiable.immutable.Identifiable, FileDescriptor> readFileDescriptor(XMLStreamReader reader, jrain.identifiable.immutable.Identifiable uid) throws XMLStreamException {
 		//assume that reader is already at a START_ELEMENT
 		String s=reader.getLocalName();
-		if(!s.equals(XMLFILETAG)) return null;//not a directory
+		if(!s.equals(XMLFILETAG)) return null;//not a file descriptor
 		XML.advance(reader);
 		Entry<jrain.identifiable.immutable.Identifiable, DirectoryDescriptor> base=null;
 		Hashes hashes=null;
@@ -45,7 +72,7 @@ public interface FileDescriptorXML{
 			}
 			--tries;
 		}
-		return new Pair<>(base.getKey(), new FileDescriptor(base.getValue().identifier(), base.getValue().getDescriptorName(),base.getValue().getPath(), base.getValue().getDescriptorSize(),base.getValue().getCreationDateTime(),base.getValue().getLastModificationDateTime(),base.getValue().getLastAccessDateTime(),base.getValue().isReadable(),hashes));
+		return getFileDescriptor(base,hashes);
 	}
 
 	/**

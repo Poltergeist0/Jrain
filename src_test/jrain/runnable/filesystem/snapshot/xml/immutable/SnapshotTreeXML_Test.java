@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.runnable.filesystem.snapshot.xml.immutable;
 
 import jrain.differentialHistory.immutable.DifferentialHistory;
@@ -25,7 +40,7 @@ public class SnapshotTreeXML_Test {
 //		ss=sxx.getXML();
 //		System.out.print(ss);
 //		System.out.println(ss.equals(s));
-		SnapshotTreeInputXML st=new SnapshotTreeInputXML("/home/poltergeist0/Desktop/deleteMe.snapshots");
+		SnapshotTreeInputXML st=new SnapshotTreeInputXML("testFiles/deleteMe.snapshots");
 		DifferentialHistory<RunnableStepByStepStatistics>.HistoryMarker marker = st.marker();
 		Thread t=new Thread(st);
 		t.start();

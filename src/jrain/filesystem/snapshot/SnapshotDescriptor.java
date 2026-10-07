@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot;
 
 import java.util.Set;
@@ -7,7 +22,7 @@ import java.util.Set;
  *
  * Snapshot descriptor.
  * 
- * Extends {@link BaseSnapshotsDescriptor}.
+ * Extends {@link FileSystemObjectDescriptor}.
  * 
  * Defines additional fields: base path, recursion, calculate hashes, and 
  * paths to exclude and include from the base path.
@@ -19,7 +34,7 @@ import java.util.Set;
  * "user/documents/.git"), and filter in is ".git/madeUpFolder" (full path would 
  * be "user/documents/.git/madeUpFolder").
  */
-public interface SnapshotDescriptor extends BaseSnapshotsDescriptor {
+public interface SnapshotDescriptor extends FileSystemObjectDescriptor {
 	
 	/**
 	 * Default base path

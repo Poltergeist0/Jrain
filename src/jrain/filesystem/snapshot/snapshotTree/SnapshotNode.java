@@ -1,8 +1,23 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.snapshotTree;
 
 import java.util.Set;
 
-import jrain.filesystem.snapshot.BaseSnapshotsDescriptor;
+import jrain.filesystem.snapshot.BaseDescriptor;
 import jrain.filesystem.snapshot.immutable.DirectoryDescriptor;
 import jrain.filesystem.snapshot.immutable.FileDescriptor;
 import jrain.filesystem.snapshot.immutable.SnapshotDescriptor;
@@ -17,7 +32,7 @@ import jrain.identifiable.immutable.Identifiable;
  * The implemented methods call the corresponding methods in the file 
  * system descriptors themselves.
  */
-public interface SnapshotNode extends BaseSnapshotsDescriptor{
+public interface SnapshotNode extends BaseDescriptor{
 	
 	/**
 	 * Types of file system descriptors.
@@ -26,8 +41,9 @@ public interface SnapshotNode extends BaseSnapshotsDescriptor{
 	 * 	- snapshot
 	 * 	- directory
 	 * 	- file
+	 *  - object for unidentified type
 	 */
-	public static enum DescriptorType {SNAPSHOTSGROUP,SNAPSHOT,DIRECTORY,FILE};
+	public static enum DescriptorType {SNAPSHOTSGROUP,SNAPSHOT,DIRECTORY,FILE,OBJECT};
 	
 	/**
 	 * Check if the current node can have the specified node as child.

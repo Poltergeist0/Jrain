@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.immutable;
 
 import java.util.Set;
@@ -8,7 +23,7 @@ import java.util.UUID;
  *
  * Snapshot descriptor.
  * 
- * Extends {@link BaseSnapshotsDescriptor}.
+ * Extends {@link FileSystemObjectDescriptor}.
  * 
  * Defines additional fields: base path, recursion, calculate hashes, and 
  * paths to exclude and include from the base path.
@@ -20,12 +35,12 @@ import java.util.UUID;
  * "user/documents/.git"), and filter in is ".git/madeUpFolder" (full path would 
  * be "user/documents/.git/madeUpFolder").
  */
-public class SnapshotDescriptor extends BaseSnapshotsDescriptor implements jrain.filesystem.snapshot.SnapshotDescriptor{
+public class SnapshotDescriptor extends FileSystemObjectDescriptor implements jrain.filesystem.snapshot.SnapshotDescriptor{
 	
 	/**
 	 * base path
 	 */
-	private final String bp;
+//	private final String bp;
 	
 	/**
 	 * hashes to calculate
@@ -69,8 +84,8 @@ public class SnapshotDescriptor extends BaseSnapshotsDescriptor implements jrain
 			Set<String> filterOut, 
 			long size
 			) {
-		super(uuid,name,size);
-		bp=basePath;
+		super(uuid,name,size,basePath);
+//		bp=basePath;
 		hsh=hashes;
 		if(recursionLevel<=0){
 			rec=0;
@@ -110,8 +125,8 @@ public class SnapshotDescriptor extends BaseSnapshotsDescriptor implements jrain
 			Set<String> filterOut, 
 			long size
 			){
-		super(original,copyUUID,name,size);
-		bp=(basePath==null)?original.getBasePath():basePath;
+		super(original,copyUUID,name,size,basePath);
+//		bp=(basePath==null)?original.getBasePath():basePath;
 		hsh=(hashes==null)?original.hashes():hashes;
 		rec=(recursionLevel<0)?original.getRecursion():recursionLevel;
 		fi=(filterIn==null)? original.getFilterIn():filterIn;
@@ -119,7 +134,7 @@ public class SnapshotDescriptor extends BaseSnapshotsDescriptor implements jrain
 	}
 	
 	public String getBasePath() {
-		return bp;
+		return super.getPath();
 	}
 
 	public Set<String> hashes(){return hsh;}

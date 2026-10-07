@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.immutable;
 
 import java.util.UUID;
@@ -7,21 +22,21 @@ import java.util.UUID;
  * 
  * Snapshots group descriptor.
  * 
- * Extends {@link BaseSnapshotsDescriptor}.
+ * Extends {@link FileSystemObjectDescriptor}.
  * 
  * Defines additional fields: filename (where the group is saved)
  */
-public class SnapshotsGroupDescriptor extends BaseSnapshotsDescriptor implements jrain.filesystem.snapshot.SnapshotsGroupDescriptor{
+public class SnapshotsGroupDescriptor extends FileSystemObjectDescriptor implements jrain.filesystem.snapshot.SnapshotsGroupDescriptor{
 	
 	/**
 	 * File name
 	 */
-	private final String fn;
+//	private final String fn;
 	
 	/**
 	 * @return the filename
 	 */
-	public String getFilename() {return fn;}
+//	public String getFilename() {return fn;}
 	
 	/**
 	 * Constructor.
@@ -31,10 +46,10 @@ public class SnapshotsGroupDescriptor extends BaseSnapshotsDescriptor implements
 	 * @param fileName is the file name where to save
 	 * @param size is the size of the descriptor
 	 */
-	public SnapshotsGroupDescriptor(UUID uuid,String name, String fileName,long size) {
-		super(uuid,name,size);
-		if(fileName==null)fn=SnapshotsGroupDescriptor.defaultSnapshotsGroupFileName;
-		else fn=fileName;
+	public SnapshotsGroupDescriptor(UUID uuid,String name, String path,long size) {
+		super(uuid,name,size,path);
+//		if(fileName==null)fn=SnapshotsGroupDescriptor.defaultSnapshotsGroupFileName;
+//		else fn=fileName;
 	}
 	
 	/**
@@ -50,9 +65,9 @@ public class SnapshotsGroupDescriptor extends BaseSnapshotsDescriptor implements
 	 * @param fileName is the file name where to save or null
 	 * @param size if <0 copies size from original otherwise assigns the passed size
 	 */
-	public SnapshotsGroupDescriptor(SnapshotsGroupDescriptor original,boolean copyUUID,String name, String fileName,long size){
-		super(original, copyUUID, name, size);
-		fn=(fileName==null)?original.getFilename():fileName;
+	public SnapshotsGroupDescriptor(SnapshotsGroupDescriptor original,boolean copyUUID,String name, String path,long size){
+		super(original, copyUUID, name, size,path);
+//		fn=(fileName==null)?original.getFilename():fileName;
 	}
 	
 }

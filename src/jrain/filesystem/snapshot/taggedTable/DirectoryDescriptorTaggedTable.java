@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.taggedTable;
 
 import jrain.filesystem.snapshot.immutable.DirectoryDescriptor;
@@ -21,7 +36,7 @@ public interface DirectoryDescriptorTaggedTable{
 	 * @return a {@link TaggedTableHeader} with the columns of a {@link DirectoryDescriptor}
 	 */
 	public static TaggedTableHeader taggedTableColumns(){
-		TaggedTableHeader a=BaseSnapshotsDescriptorTaggedTable.taggedTableColumns();
+		TaggedTableHeader a=FileSystemObjectDescriptorTaggedTable.taggedTableColumns();
 		a.add(jrain.filesystem.snapshot.DirectoryDescriptor.tagPath,new TaggedTableColumnData<PolyType<?>>(new StringPoly(jrain.filesystem.snapshot.DirectoryDescriptor.defaultPath)),false);
 		a.add(jrain.filesystem.snapshot.DirectoryDescriptor.tagCreationDateTime,new TaggedTableColumnData<PolyType<?>>(new LocalDateTimePoly(jrain.filesystem.snapshot.DirectoryDescriptor.defaultCreationDateTime)),false);
 		a.add(jrain.filesystem.snapshot.DirectoryDescriptor.tagModificationDateTime,new TaggedTableColumnData<PolyType<?>>(new LocalDateTimePoly(jrain.filesystem.snapshot.DirectoryDescriptor.defaultModificationDateTime)),false);
@@ -38,7 +53,7 @@ public interface DirectoryDescriptorTaggedTable{
 	 */
 	public static TaggedTableRow taggedTableRows(DirectoryDescriptor d){
 		TaggedTableRow b = new TaggedTableRow(d);
-		b.add(BaseSnapshotsDescriptorTaggedTable.taggedTableRows(d),false);
+		b.add(FileSystemObjectDescriptorTaggedTable.taggedTableRows(d),false);
 		b.add(jrain.filesystem.snapshot.DirectoryDescriptor.tagPath,new StringPoly(d.getPath()),false);
 		b.add(jrain.filesystem.snapshot.DirectoryDescriptor.tagCreationDateTime,new LocalDateTimePoly(d.getCreationDateTime()),false);
 		b.add(jrain.filesystem.snapshot.DirectoryDescriptor.tagModificationDateTime,new LocalDateTimePoly(d.getLastModificationDateTime()),false);

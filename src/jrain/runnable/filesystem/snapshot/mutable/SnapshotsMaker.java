@@ -1,7 +1,23 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.runnable.filesystem.snapshot.mutable;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,6 +35,7 @@ import jrain.filesystem.snapshot.snapshotTree.immutable.SnapshotTree;
 import jrain.hash.hashInstance.hashes.immutable.Hashes;
 import jrain.runnable.filesystem.snapshot.xml.immutable.SnapshotTreeInputXML;
 import jrain.runnable.filesystem.snapshot.xml.immutable.SnapshotTreeOutputXML;
+import jrain.NumberWithMultiple.ByteSizeWithMultiple;
 import jrain.deepCopy.DeepCopy;
 import jrain.exceptions.ExceptionProcessing;
 import jrain.differentialHistory.immutable.DifferentialHistory;
@@ -36,16 +53,24 @@ import jrain.runnable.RunnableStepByStepStatistics.FIELD;
  * Each instance of this class corresponds to a snapshots group instance.
  * It contains methods to handle snapshots by allowing to add/remove
  * snapshots/directories/files, read/save snapshots from/to xml file.
+ * 
+ * Only supports reading form xml into a new instance of this class to avoid clashes
+ * between loaded and currently processing snapshots.
+ * 
+ * Can find duplicate files by hash only.
+ * 
+ * Currently single threaded, time multiplexed, but in the future might be 
+ * configurable with threads (already supports them)
  */
 public class SnapshotsMaker extends RunnableStepByStep implements jrain.identifiable.Identifiable<UUID>{
 
 	private class TransverseDir extends TransverseDirectories{
 
 		public TransverseDir(String snapshotName, String basePath,
-				Set<String> filterOut, 
-				Set<String> hashes,
-				int recursion, int BufferSize) throws Exception {
-			super(snapshotName, basePath, filterOut, hashes, recursion,
+				Set<Path> filterOut, 
+				Set<String> hashes,ByteSizeWithMultiple byteCount,
+				int recursion, ByteSizeWithMultiple BufferSize) throws Exception {
+			super(snapshotName, basePath, filterOut, hashes, byteCount, recursion,
 					BufferSize);
 		}
 		
@@ -177,17 +202,19 @@ public class SnapshotsMaker extends RunnableStepByStep implements jrain.identifi
 				Identifiable isn2=processingDuplicates.get(dupInd);
 				SnapshotNode sn1=sn.getNode(isn1).getData();
 				SnapshotNode sn2=sn.getNode(isn2).getData();
-				Hashes h1=sn1.getFileDescriptor().getHashes();
-				Hashes h2=sn2.getFileDescriptor().getHashes();
-				if(h1.hasHashes() && h2.hasHashes()){
-					if(h1.equals(h2)){
-						//they are duplicates
-						//replace sn1
-						SnapshotNode snn=new SnapshotNode(sn1, sn2,true);
-						sn=new SnapshotTree(sn, sn1, snn);
-						//replace sn2
-						snn=new SnapshotNode(sn2,snn,true);
-						sn=new SnapshotTree(sn, sn2, snn);
+				if(sn1.getDescriptorSize()==sn2.getDescriptorSize()) {
+					Hashes h1=sn1.getFileDescriptor().getHashes();
+					Hashes h2=sn2.getFileDescriptor().getHashes();
+					if(h1.hasHashes() && h2.hasHashes()){
+						if(h1.equals(h2)){
+							//they are duplicates
+							//replace sn1
+							SnapshotNode snn=new SnapshotNode(sn1, sn2,true);
+							sn=new SnapshotTree(sn, sn1, snn);
+							//replace sn2
+							snn=new SnapshotNode(sn2,snn,true);
+							sn=new SnapshotTree(sn, sn2, snn);
+						}
 					}
 				}
 				++dupInd;
@@ -349,7 +376,7 @@ public class SnapshotsMaker extends RunnableStepByStep implements jrain.identifi
 				a=savePath;
 			}
 			else { //save on the file indicated on the group
-				a = d.getFilename();
+				a = d.getDescriptorName();
 				if(a==null)throw new NullPointerException("File name is null");
 			}
 		}
@@ -384,12 +411,13 @@ public class SnapshotsMaker extends RunnableStepByStep implements jrain.identifi
 	public Identifiable addSnapshot(
 			final String snapshotName,
 			final String basePath,
-			final Set<String> filterOut,
+			final Set<Path> filterOut,
 			Set<String> hashes,
+			ByteSizeWithMultiple byteCount,
 			final int recursion,
-			final int BufferSize
+			final ByteSizeWithMultiple BufferSize
 			) throws Exception{
-		TransverseDir t=new TransverseDir(snapshotName, basePath, filterOut, hashes, recursion, BufferSize);
+		TransverseDir t=new TransverseDir(snapshotName, basePath, filterOut, hashes, byteCount, recursion, BufferSize);
 //		ConcurrentHashMap<Identifiable,TransverseDir> a = snapshots;
 //		a.put(t.identifiable(),t);
 //		snapshots.set(a);

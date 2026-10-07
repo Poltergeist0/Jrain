@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.xml;
 
 import java.util.HashSet;
@@ -9,6 +24,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import jrain.filesystem.snapshot.immutable.FileSystemObjectDescriptor;
 import jrain.filesystem.snapshot.immutable.DirectoryDescriptor;
 import jrain.filesystem.snapshot.immutable.FileDescriptor;
 import jrain.filesystem.snapshot.immutable.SnapshotDescriptor;
@@ -85,6 +101,14 @@ public interface SnapshotNodeXML {
 			XML.advancePast(reader, FileDescriptorXML.XMLFILETAG);
 			XML.advance(reader);
 			return new Pair<>(fd.getKey(), new SnapshotNode(fd.getValue(),dup,false));
+		}
+		Entry<Identifiable, FileSystemObjectDescriptor> od=FileSystemObjectDescriptorXML.readFileSystemObjectDescriptor(reader,jrain.identifiable.Identifiable.objectTypeOf(jrain.filesystem.snapshot.immutable.FileSystemObjectDescriptor.class),uid);
+		if(od!=null) {
+//			dup=readDuplicates(reader,od.getValue().objectType());
+			//read past the closing tag for files since they have no children
+			XML.advancePast(reader, FileSystemObjectDescriptorXML.XMLOBJECTTAG);
+			XML.advance(reader);
+			return new Pair<>(od.getKey(), new SnapshotNode(od.getValue(),false));
 		}
 		return null;
 	}

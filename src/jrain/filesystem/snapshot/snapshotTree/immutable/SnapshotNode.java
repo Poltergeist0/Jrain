@@ -1,10 +1,26 @@
+/*******************************************************************************
+ * Copyright (C) 2026 poltergeist0
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Any libraries this program depends on have their own Licenses.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * LICENSE file for more details.
+ ******************************************************************************/
 package jrain.filesystem.snapshot.snapshotTree.immutable;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import jrain.filesystem.snapshot.BaseSnapshotsDescriptor;
+//import jrain.filesystem.snapshot.immutable.FileSystemObjectDescriptor;
+import jrain.filesystem.snapshot.immutable.FileSystemObjectDescriptor;
 import jrain.filesystem.snapshot.immutable.DirectoryDescriptor;
 import jrain.filesystem.snapshot.immutable.FileDescriptor;
 import jrain.filesystem.snapshot.immutable.SnapshotDescriptor;
@@ -30,7 +46,7 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	/**
 	 * Container for all descriptor types
 	 */
-	private final PolyType<? extends BaseSnapshotsDescriptor> descriptor;
+	private final PolyType<? extends FileSystemObjectDescriptor> descriptor;
 	
 	/**
 	 * List of duplicates
@@ -89,7 +105,7 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	/**
 	 * @return the container of the descriptors for classes that extend this one
 	 */
-	protected PolyType<? extends BaseSnapshotsDescriptor> getDescriptor(){return descriptor;}
+	protected PolyType<? extends FileSystemObjectDescriptor> getDescriptor(){return descriptor;}
 	
 	/**
 	 * Constructor for {@link SnapshotsGroupDescriptor}.
@@ -101,7 +117,7 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	public <T extends SnapshotsGroupDescriptor> SnapshotNode(T snapshotsGroup){
 		super(snapshotsGroup);
 		tp=DescriptorType.SNAPSHOTSGROUP;
-		descriptor=new PolyType<BaseSnapshotsDescriptor>(snapshotsGroup);
+		descriptor=new PolyType<FileSystemObjectDescriptor>(snapshotsGroup);
 		dup=new HashSet<>();
 		proc=false;
 		onl=false;
@@ -121,7 +137,7 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	public <T extends SnapshotDescriptor> SnapshotNode(T snapshot,Set<? extends Identifiable> duplicateSnapshots,final boolean processing,final boolean online) {
 		super(snapshot);
 		tp=DescriptorType.SNAPSHOT;
-		descriptor=new PolyType<BaseSnapshotsDescriptor>(snapshot);
+		descriptor=new PolyType<FileSystemObjectDescriptor>(snapshot);
 		if(duplicateSnapshots==null){
 			dup=new HashSet<>();
 		}
@@ -145,7 +161,7 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	public <T extends DirectoryDescriptor> SnapshotNode(T directory,Set<? extends Identifiable> duplicateDirectories,final boolean online) {
 		super(directory);
 		tp=DescriptorType.DIRECTORY;
-		descriptor=new PolyType<BaseSnapshotsDescriptor>(directory);
+		descriptor=new PolyType<FileSystemObjectDescriptor>(directory);
 		if(duplicateDirectories==null){
 			dup=new HashSet<>();
 		}
@@ -169,13 +185,32 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	public <T extends FileDescriptor> SnapshotNode(T file,Set<? extends Identifiable> duplicateFiles,final boolean online) {
 		super(file);
 		tp=DescriptorType.FILE;
-		descriptor=new PolyType<BaseSnapshotsDescriptor>(file);
+		descriptor=new PolyType<FileSystemObjectDescriptor>(file);
 		if(duplicateFiles==null){
 			dup=new HashSet<>();
 		}
 		else{
 			dup=new HashSet<>(duplicateFiles);
 		}
+		proc=false;
+		onl=online;
+		del=false;
+		ref=REFERENCE.UNMARK;
+	}
+	
+	/**
+	 * Constructor for {@link FileSystemObjectDescriptor}.
+	 * File system objects do not have duplicates since the object itself can not be accessed.
+	 * 
+	 * @param <T> is the type of the class that extends {@link FileSystemObjectDescriptor}
+	 * @param directory is the descriptor
+	 * @param online is the flag that marks the node as currently being online
+	 */
+	public <T extends FileSystemObjectDescriptor> SnapshotNode(T object,final boolean online) {
+		super(object);
+		tp=DescriptorType.OBJECT;
+		descriptor=new PolyType<FileSystemObjectDescriptor>(object);
+		dup=new HashSet<>();
 		proc=false;
 		onl=online;
 		del=false;
@@ -376,6 +411,13 @@ public class SnapshotNode extends Identifiable implements jrain.filesystem.snaps
 	public FileDescriptor getFileDescriptor(){
 		if(tp==DescriptorType.FILE){
 			return (FileDescriptor) descriptor.get();
+		}
+		return null;
+	}
+	
+	public FileSystemObjectDescriptor getObjectDescriptor(){
+		if(tp==DescriptorType.OBJECT){
+			return (FileSystemObjectDescriptor) descriptor.get();
 		}
 		return null;
 	}
