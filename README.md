@@ -48,3 +48,9 @@ If you want to add features, it is probably best to fork the project and add/mod
 Known list of forks that modify this project to add features. The forks are not compared with this project for changes and are the sole responsibility  of the forker.
 
 None yet.
+
+
+# Appreciate this project?
+
+Consider buying me a coffee.
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/poltergeist0)
