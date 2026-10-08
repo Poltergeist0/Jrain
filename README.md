@@ -53,4 +53,5 @@ None yet.
 # Appreciate this project?
 
 Consider buying me a coffee.
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/poltergeist0)
+
+[!["Buy Me A Coffee"](bmc-button.png)](https://www.buymeacoffee.com/poltergeist0)
